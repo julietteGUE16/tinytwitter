@@ -14,7 +14,7 @@ def listMessages():
 @app.route('/chat/add', methods=['POST'])
 def addMessage():
     id = uuid.uuid4().hex
-    message = {"id": id, "name": request.form['pseudo'], "message": request.form['text'], "like": 0, "comment": request.form['commented']}
+    message = {"id": id, "name": request.form['pseudo'], "message": request.form['text'], "like": 0, "comments": []}
     items.append(message)
     with open("messages.json", "w") as file:
         file.write(json.dumps(items, indent=2))
@@ -34,9 +34,11 @@ def is_liked():
 
 @app.route('/chat/comment', methods=['POST'])
 def add_comment():
-    comment = {"comment": request.form['commented']}
-    items.append(comment)
+    id = request.form['id']
+    comment = request.form['commented']
     for x in items:
-        with open("messages.json", "w") as file:
-            file.write(json.dumps(items, file))
-        return redirect(url_for("listMessages"))
+        if x['id'] == id:
+            x['comments'].append(comment)
+    with open("messages.json", "w") as file:
+        file.write(json.dumps(items, indent=2))
+    return redirect(url_for("listMessages"))

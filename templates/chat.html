@@ -72,6 +72,15 @@
       li {
         left: 100px;
       }
+
+      .messages {
+        padding-top: 50px;
+        padding-bottom: 50px;
+      }
+
+      .messages li {
+        margin-bottom: 30px;
+      }
     </style>
   </head>
 
@@ -99,7 +108,7 @@
             </form>
           </div>
         </div>
-        <ul>
+        <ul class="messages">
           {% for item in messages %}
           <li>
             {{ item['name'] }} à tweeté : {{ item['message'] }} | Nbr de like:
@@ -118,11 +127,19 @@
                 />
                 <p id="demo-{{loop.index}}"></p>
               </form>
-              <form action="chat/add" method="post">
+              <form action="chat/comment" method="post">
+                <input type="hidden" name="id" value="{{ item['id'] }}" />
                 comment :<input type="text" name="commented" />
                 <button type="submit">Submit</button>
               </form>
-              comment : {{ item['comment'] }}
+              comment : 
+              <div>
+                {% for comment in item['comments'] %}
+                  <p>
+                    {{ comment|safe }}
+                  </p>
+                {% endfor %}
+              </div>
             </span>
           </li>
           {% endfor %}
