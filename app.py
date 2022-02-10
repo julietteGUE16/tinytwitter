@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
-import json,emoji
-app = Flask(__name__)
+import json
+import uuid
 
+app = Flask(__name__)
 
 with open("messages.json", "r") as file:
     items = json.loads(file.read())
@@ -9,17 +10,35 @@ with open("messages.json", "r") as file:
 
 @app.route('/chat')
 def listMessages():
-    return render_template("chat.html", messages = items)
+    return render_template("chat.html", messages=items)
 
 
 @app.route('/chat/add', methods=['POST'])
 def addMessage():
-    message = { "name": request.form['pseudo'], "message": request.form['text'], "like": request.form['like']}
+    id = uuid.uuid4().hex
+    message = {"id": id, "name": request.form['pseudo'], "message": request.form['text'], "like": 0, "comment": request.form['commented']}
     items.append(message)
     with open("messages.json", "w") as file:
         file.write(json.dumps(items, indent=2))
     return redirect(url_for("listMessages"))
 
+
+@app.route('/chat/like', methods=['POST'])
 def is_liked():
-    like = "aimé"
-    return like
+    id = request.form['id']
+    for x in items:
+        if x['id'] == id:
+            x['like'] = int(x['like']) + int(1)
+    with open("messages.json", "w") as file:
+        json.dump(items, file)
+    return redirect(url_for("listMessages"))
+
+
+@app.route('/chat/like', methods=['POST'])
+def add_comment():
+    comment = {"comment": request.form['commented']}
+    items.append(comment)
+    for x in items:
+        with open("messages.json", "w") as file:
+            file.write(json.dumps(items, file))
+        return redirect(url_for("listMessages"))

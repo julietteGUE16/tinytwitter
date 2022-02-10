@@ -1,104 +1,133 @@
-<!doctype HTML>
+<!DOCTYPE html>
 <html>
-    <head>
-        <title>Twitter mini</title>
-        <link
-        href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Prompt:wght@200&display=swap" rel="stylesheet">
-        <style>
-    * {
-  margin: 0;
-  font-family: "Architects Daughter";
-  }
-  .navbar {
-  height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 5%;
-  left: 0;
-  right: 0;
-  background: rgb(0, 0, 0);
-}
-.menu {
-  width: 10%;
-}
+  <head>
+    <title>Twitter mini</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Architects+Daughter&family=Prompt:wght@200&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      * {
+        margin: 0;
+        font-family: "Architects Daughter";
+      }
 
-.logo {
-  color: #ffffff;
-  font-size: 30px;
-}
+      .navbar {
+        height: 100px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0 5%;
+        left: 0;
+        right: 0;
+        background: rgb(0, 0, 0);
+      }
 
-img {
-width: 60%;
-}
+      .menu {
+        width: 10%;
+      }
 
-navbar > ul {
-  display: flex;
-  justify-content: center;
-  align-items: right;
-}
-  .main{
-  background: linear-gradient(
-      to bottom,
-      #2ECCFA,
-      rgba(255, 255, 255, 0.671) 50%
-    );
-  }
-.entrée{
-background:#2ECCFA;
-bottom: 3%;
-  right: 2%;
-  z-index: 9999;
-  position: fixed;
-  width:450px;
-	height:70px;
-	border-radius: 10%;
-	display:flex;
-	box-shadow: 15px 15px 15px grey;
-	opacity:80%;
-}
-.saisie{
-margin-top: 25px;
-margin-left:30px;
-}
-li{
-left: 100px;
-}
-</style>
-    </head>
-    <body>
+      .logo {
+        color: #ffffff;
+        font-size: 30px;
+      }
+
+      img {
+        width: 60%;
+      }
+
+      navbar > ul {
+        display: flex;
+        justify-content: center;
+        align-items: right;
+      }
+
+      .main {
+        background: linear-gradient(
+          to bottom,
+          #2eccfa,
+          rgba(255, 255, 255, 0.671) 60%
+        );
+        height: 100vh;
+      }
+
+      .entrée {
+        background: #2eccfa;
+        bottom: 3%;
+        right: 2%;
+        z-index: 9999;
+        position: fixed;
+        border-radius: 10%;
+        box-shadow: 15px 15px 15px grey;
+        opacity: 80%;
+      }
+
+      .saisie {
+        margin-top: 10px;
+        margin-left: 30px;
+        margin-bottom: 10px;
+        margin-right: 30px;
+      }
+
+      li {
+        left: 100px;
+      }
+    </style>
+  </head>
+
+  <body>
     <div class="navbar">
-        <div class="logo">
-            <h1>Tiny Twitter</h1>
-        </div>
-        <div class="menu">
-            <ul>
-            <li><img src="https://zupimages.net/up/22/05/3pu3.png"></li>
+      <div class="logo">
+        <h1>Tiny Twitter</h1>
+      </div>
+      <div class="menu">
+        <ul>
+          <li><img src="https://zupimages.net/up/22/05/3pu3.png" /></li>
         </ul>
-        </div>
+      </div>
     </div>
     <section class="main">
-        <section class="page1">
-            <div class="entrée">
-                <div class="saisie">
-                    <form action="chat/add" method="post">
-            <input type="text" name="pseudo"/>
-            <input type="text" name="text"/>
-            <button type="submit">Submit</button>
-            </div>
-            </div>
+      <section class="page1">
+        <div class="entrée">
+          <div class="saisie">
+            <form action="chat/add" method="post">
+              name :<input type="text" name="pseudo" /> tweet :<input
+                type="text"
+                name="text"
+              />
+              <button type="submit">Submit</button>
+            </form>
+          </div>
+        </div>
         <ul>
-            {% for item in messages %}
-                <li>{{ item['name'] }} à tweeté : {{ item['message'] }} <span>
-                    <form style="display: inline-block;" method="post" action="chat/add">
-                    <input type="hidden" name="like" value="{{loop.index0}}" />
-                    <input type="button" value="j'aime" onclick="getElementById('demo').innerHTML=Date()" />
-                        <p id="demo"></p>
-                </form>
-                </span></li>
-            {% endfor %}
+          {% for item in messages %}
+          <li>
+            {{ item['name'] }} à tweeté : {{ item['message'] }} | Nbr de like:
+            {{ item['like'] }}
+            <span>
+              <form
+                style="display: inline-block"
+                method="post"
+                action="chat/like"
+              >
+                <input type="hidden" name="id" value="{{ item['id'] }}" />
+                <input
+                  type="submit"
+                  value="j'aime"
+                  onclick="getElementById('demo-{{loop.index}}')"
+                />
+                <p id="demo-{{loop.index}}"></p>
+              </form>
+              <form action="chat/add" method="post">
+                comment :<input type="text" name="commented" />
+                <button type="submit">Submit</button>
+              </form>
+              comment : {{ item['comment'] }}
+            </span>
+          </li>
+          {% endfor %}
         </ul>
-        </section>
+      </section>
     </section>
-    </body>
+  </body>
 </html>
